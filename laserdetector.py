@@ -62,6 +62,9 @@ def func(x, a, b):
 [A, B], pcovmatrix = curve_fit(func, x, y)
 linebestfit = np.poly1d([A, B])
 
+plt.title("Frequency vs X-displacement of Laser Spot")
+plt.xlabel("Frequency (Hz)")
+plt.ylabel("X-displacement (m)")
 plt.plot(x, y, '.', x, linebestfit(x))
 plt.show()
 
@@ -70,7 +73,7 @@ plt.show()
 #   in our case, (f/x) = 1/slope = 1/A
 #   c = 8*pi*r*d/A
 
-r = (100.8-12.8+10.8)/100
+r = (100.8-12.8+10.8)/100 #cm to m
 d = (112.5+85.6+595)/100
 
 covmatrix = np.cov(x, y)
@@ -83,9 +86,13 @@ uncertainty = [math.sqrt(covmatrix[0][0]), math.sqrt(covmatrix[1][1])] #[x, y]
 #uncertainty of parameters
 paramuncert = [math.sqrt(pcovmatrix[0][0]), math.sqrt(pcovmatrix[1][1])]
 
-print(uncertainty)
+print("Paramters uncertainty:")
 print(paramuncert)
+
+print("Ax + B:")
+print("A = " + str(A) + "\nB = " + str(B))
 
 #speed of light
 c = 8*math.pi*r*d/A
+print("Speed of light:")
 print(c)
