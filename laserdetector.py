@@ -2,6 +2,7 @@ import numpy as np
 from PIL import Image
 from matplotlib import pyplot as plt
 import math
+from scipy.optimize import curve_fit
 
 freqPercentage = [['5', 77.2],['7', 111.8],['9', 148.5],['11', 178.0], ['13', 202.8], ['15', 229.7],['17', 243.5],['19', 259.8],['21', 279.8],['23', 286.7],['25', 297.0]]
 
@@ -54,13 +55,15 @@ for i in range(0, len(freqPercentage)):
     averages = getPos(LaserSpotData)
     y.append((imagewidth-averages[0])*0.0000048) #adds x position of spot in meters
 
+def func(x, a, b):
+    return a*x + b
 
 # y = Ax + B, where x = frequency and y = x-displacement on camera
-[A, B] = np.polyfit(x,y,1)
+[A, B], pcovmatrix = curve_fit(func, x, y)
 linebestfit = np.poly1d([A, B])
 
-#plt.plot(x, y, '.', x, linebestfit(x))
-#plt.show()
+plt.plot(x, y, '.', x, linebestfit(x))
+plt.show()
 
 #   x = 8*pi*r*d*f/c
 #   c = 8*pi*r*d*(f/x)
@@ -76,7 +79,12 @@ covmatrix = np.cov(x, y)
 
 #uncertainty is sqrt of variance
 uncertainty = [math.sqrt(covmatrix[0][0]), math.sqrt(covmatrix[1][1])] #[x, y]
+
+#uncertainty of parameters
+paramuncert = [math.sqrt(pcovmatrix[0][0]), math.sqrt(pcovmatrix[1][1])]
+
 print(uncertainty)
+print(paramuncert)
 
 #speed of light
 c = 8*math.pi*r*d/A
