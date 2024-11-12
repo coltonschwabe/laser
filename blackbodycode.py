@@ -48,12 +48,13 @@ redbacktotal = numpy.sum(RedOffData[:,:,0])
 bluebacktotal = numpy.sum(BlueOffData[:,:,2])
 greenbacktotal = numpy.sum(GreenOffData[:,:,1])
 
-#print("Red Total:" + str(redtotal))
-#print("Green Total:" + str(greentotal))
-#print("Blue Total:" + str(bluetotal))
+print("Red Total: " + str(redtotal))
+print("Green Total: " + str(greentotal))
+print("Blue Total: " + str(bluetotal))
 
-#print("RedB Total:" + str(redbacktotal))
-#print("BlueB Total:" + str(bluebacktotal))
+print("RedB Total: " + str(redbacktotal))
+print("BlueB Total: " + str(bluebacktotal))
+print("GreenB Total: " + str(greenbacktotal))
 
 #exposure times for [red, green, blue]
 exposure = [5000, 20000, 70000]
@@ -63,14 +64,18 @@ redI = (redtotal - redbacktotal)/exposure[0]
 greenI = (greentotal - greenbacktotal)/exposure[1]
 blueI = (bluetotal - bluebacktotal)/exposure[2]
 
-print(redI/greenI)
-print(blueI/redI)
-print(greenI/blueI)
+print("red intensity: " + str(redI))
+print("green intensity: " + str(greenI))
+print("blue intensity: " + str(blueI))
+
+rgRatio = redI/greenI
+brRatio = blueI/redI
+gbRatio = greenI/blueI
 
 #calculates temps
 temps = []
 
-for t in range(1000, 6000, 10):
+for t in range(1000, 4000, 10):
     temps.append(t)
 
 Rrg = []
@@ -98,11 +103,24 @@ for temp in temps:
     Rgb.append(gb)
     Rbr.append(br)
 
-plt.figure(1)
-plt.plot(temps,Rrg,'-r')
-plt.plot(temps, Rbr, '-b')
-plt.plot(temps, Rgb, '-g')
-plt.show()
+for i in range(0, len(Rrg)-1):
+    if(rgRatio <= Rrg[i] and rgRatio >= Rrg[i+1]): 
+        print("red/green: " + str(temps[i]))
+
+for i in range(0, len(Rbr)-1):
+    if(brRatio >= Rbr[i] and brRatio <= Rbr[i+1]): 
+        print("blue/red: " + str(temps[i]))
+
+for i in range(0, len(Rgb)-1):
+    if(gbRatio <= Rgb[i] and gbRatio >= Rgb[i+1]): 
+        print("green/blue: " + str(temps[i]))
+
+
+#plt.figure(1)
+#plt.plot(temps,Rrg,'-r')
+#plt.plot(temps, Rbr, '-b')
+#plt.plot(temps, Rgb, '-g')
+#plt.show()
 
 # gets frequencies
 #strfreqs = []
